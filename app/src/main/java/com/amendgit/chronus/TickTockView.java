@@ -25,34 +25,38 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class TickTockView extends View {
-    private Paint mFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mEmptyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mFillPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mEmptyPaint  = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mMiddlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mTextPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    private RectF mArc = new RectF();
+    private RectF mArc    = new RectF();
     private Point mCenter = new Point();
 
     private Canvas mCanvas;
     private Bitmap mCanvasBitmap;
     private Matrix mMatrix = new Matrix();
 
-    private float mRingRadius = 100;
+    private float mRingRadius    = 100;
     private float mRingThickness = 3;
-    private float mDotRadius = 6;
+    private float mDotRadius     = 6;
 
-    private long mTimeRemaining = 0;
-    private float mTextPadding = 16;
-    private Rect mTextBounds = new Rect();
-    private CharSequence mText = null;
 
     private int mEmptyRingColor = Color.WHITE;
-    private int mFillRingColor = Color.parseColor("#35bb8b");
-    private int mMiddleColor = Color.TRANSPARENT;
-    private int mTextColor = Color.parseColor("#35bb8b");
-    private float mTextSize = 80;
+    private int mFillRingColor  = Color.BLUE;
+    private int mMiddleColor    = Color.TRANSPARENT;
+    private int mTextColor      = Color.WHITE;
+
+    private CharSequence mText = null;
+    private float mTextSize    = 80;
+    private float mTextPadding = 16;
+    private Rect mTextBounds   = new Rect();
+
+    private long mTimeRemaining = 0;
+    private long mTotalTimeInMillis = 0;
 
     private boolean mCounterClockwise = false;
     private boolean mAutoFitText = true;
@@ -62,8 +66,6 @@ public class TickTockView extends View {
     private final int DURATION_MINUTE = 0;
     private final int DURATION_TOTAL = 1;
     private int mCircleDuration = DURATION_MINUTE;
-    private Calendar mStartTime = null;
-    private Calendar mEndTime = null;
 
     public TickTockView(Context context) {
         super(context);
@@ -89,27 +91,27 @@ public class TickTockView extends View {
     private void init(Context context, AttributeSet attrs) {
         float multi = context.getResources().getDisplayMetrics().density;
 
-        mRingRadius *= multi;
+        mRingRadius    *= multi;
         mRingThickness *= multi;
-        mDotRadius *= multi;
-        mTextPadding *= multi;
+        mDotRadius     *= multi;
+        mTextPadding   *= multi;
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TickTockView, 0, 0);
         try {
             mEmptyRingColor = ta.getColor(R.styleable.TickTockView_tickEmptyRingColor, mEmptyRingColor);
-            mFillRingColor = ta.getColor(R.styleable.TickTockView_tickFillRingColor, mFillRingColor);
-            mMiddleColor = ta.getColor(R.styleable.TickTockView_tickMiddleColor, mMiddleColor);
-            mTextColor = ta.getColor(R.styleable.TickTockView_tickTextColor, mTextColor);
+            mFillRingColor  = ta.getColor(R.styleable.TickTockView_tickFillRingColor,  mFillRingColor);
+            mMiddleColor    = ta.getColor(R.styleable.TickTockView_tickMiddleColor,    mMiddleColor);
+            mTextColor      = ta.getColor(R.styleable.TickTockView_tickTextColor,      mTextColor);
 
             mRingThickness = ta.getDimension(R.styleable.TickTockView_tickRingThickness, mRingThickness);
-            mDotRadius = ta.getDimension(R.styleable.TickTockView_tickDotRadius, mDotRadius);
-            mTextSize = ta.getDimension(R.styleable.TickTockView_tickTextSize, mTextSize);
+            mDotRadius     = ta.getDimension(R.styleable.TickTockView_tickDotRadius,     mDotRadius);
+            mTextSize      = ta.getDimension(R.styleable.TickTockView_tickTextSize,      mTextSize);
 
-            mText = ta.getText(R.styleable.TickTockView_tickText);
+            mText        = ta.getText(R.styleable.TickTockView_tickText);
             mAutoFitText = ta.getBoolean(R.styleable.TickTockView_tickAutoFitText, mAutoFitText);
 
             mCounterClockwise = ta.getBoolean(R.styleable.TickTockView_tickMoveCounterClockwise, mCounterClockwise);
-            mCircleDuration = ta.getInt(R.styleable.TickTockView_tickCircleDuration, mCircleDuration);
+            mCircleDuration   = ta.getInt(R.styleable.TickTockView_tickCircleDuration,           mCircleDuration);
         } finally {
             ta.recycle();
         }
@@ -140,7 +142,9 @@ public class TickTockView extends View {
     }
 
     private void drawInitialCircle() {
-        if (mCanvas == null || mCanvasBitmap.getWidth() != getWidth() || mCanvasBitmap.getHeight() != getHeight()) {
+        if (mCanvas == null ||
+            mCanvasBitmap.getWidth() != this.getWidth() ||
+            mCanvasBitmap.getHeight() != this.getHeight()) {
             if (mCanvasBitmap != null) {
                 mCanvas = null;
                 mCanvasBitmap.recycle();
@@ -160,9 +164,9 @@ public class TickTockView extends View {
     }
 
     private void calculateArc() {
-        mArc.left = mCenter.x - mRingRadius;
-        mArc.top = mCenter.y - mRingRadius;
-        mArc.right = mCenter.x + mRingRadius;
+        mArc.left   = mCenter.x - mRingRadius;
+        mArc.top    = mCenter.y - mRingRadius;
+        mArc.right  = mCenter.x + mRingRadius;
         mArc.bottom = mCenter.y + mRingRadius;
     }
 
@@ -177,7 +181,7 @@ public class TickTockView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mRingRadius = ((getMeasuredWidth() - getPaddingLeft()) / 2) - mDotRadius;
+        mRingRadius = ((this.getMeasuredWidth() - this.getPaddingLeft()) / 2) - mDotRadius;
         if (!TextUtils.isEmpty(mText)) {
             fitText(mText);
         }
@@ -186,14 +190,16 @@ public class TickTockView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawInitialCircle();
 
-        calculateArc();
+        this.drawInitialCircle();
+
+        this.calculateArc();
+
         long ms = isInEditMode() ? System.currentTimeMillis() % 60000 : mTimeRemaining % 60000;
         float angle = (float) (ms * 0.006);
 
-        if (mCircleDuration == DURATION_TOTAL && mStartTime != null) {
-            long totalTime = mEndTime.getTimeInMillis() - mStartTime.getTimeInMillis();
+        if (mCircleDuration == DURATION_TOTAL && mTimeRemaining > 0) {
+            long totalTime = mTotalTimeInMillis;
             float percentage = (((float) mTimeRemaining) / ((float) totalTime));
             angle = 360f * percentage;
         }
@@ -212,7 +218,7 @@ public class TickTockView extends View {
         // Clear the center
         mCanvas.drawCircle(mCenter.x, mCenter.y, mRingRadius - mRingThickness, mMiddlePaint);
 
-        drawDot();
+        this.drawDot();
 
         if (!mCounterClockwise) {
             mMatrix.setRotate(-angle, mCanvas.getWidth() / 2, mCanvas.getHeight() / 2);
@@ -226,7 +232,8 @@ public class TickTockView extends View {
         }
 
         if (!TextUtils.isEmpty(mText)) {
-            canvas.drawText(mText.toString(), getWidth() / 2 - mTextBounds.width() / 2, getHeight() / 2 + mTextBounds.height() / 2, mTextPaint);
+            canvas.drawText(mText.toString(), getWidth() / 2 - mTextBounds.width() / 2,
+                    getHeight() / 2 + mTextBounds.height() / 2, mTextPaint);
         }
     }
 
@@ -236,54 +243,51 @@ public class TickTockView extends View {
         mCanvas.drawCircle(centerX, centerY, mDotRadius, mFillPaint);
     }
 
-    /**
-     * @param endTime Calendar the time to count down till.
-     */
-    public void start(Calendar endTime) {
-        if (endTime == null || endTime.before(Calendar.getInstance())) {
-            throw new IllegalArgumentException("endTime cannot be null and must be in the future");
-        }
-
-        //Fix for issue #1 where hot deploying would result in text being rendered incorrectly.
-        if (!TextUtils.isEmpty(mText) && (mTextBounds.width() == 0 || mTextBounds.height() == 0) && mTextSize > 0) {
-            //When code is hot deployed,
-            fitText(mText);
-        }
-
-        mEndTime = endTime;
-
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
-
-        mTimer = new CountDownTimer(endTime.getTimeInMillis() - System.currentTimeMillis(), 16) {
+    public void start(long timeInMillis) {
+        mTotalTimeInMillis = timeInMillis;
+        if (mTimer != null) { mTimer.cancel(); mTimer = null; }
+        mTimer = new CountDownTimer(mTotalTimeInMillis, 16) {
             @Override
             public void onTick(long millisUntilFinished) {
-                mTimeRemaining = millisUntilFinished;
-                updateText(mTimeRemaining);
-                invalidate();
+                updateText(mTimeRemaining = millisUntilFinished);
             }
 
             @Override
             public void onFinish() {
                 updateText(0);
-                invalidate();
+            }
+        }.start();
+    }
+
+    public void pause() {
+        mTimer.cancel();
+    }
+
+    public void resume() {
+        mTimer = new CountDownTimer(mTimeRemaining, 16) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                updateText(mTimeRemaining = millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                updateText(0);
             }
         }.start();
     }
 
     /**
-     * Only for use with with tickCircleDuration = total_time
-     *
-     * @param startTime Calendar the start time which represents starting point for the circle.
-     * @param endTime Calendar the end time which represents a full circle
+     * Remove stop the timer.
      */
-    public void start(Calendar startTime, Calendar endTime) {
-        if (startTime == null || endTime == null || startTime.after(endTime)) {
-            throw new IllegalArgumentException("startTime and endTime cannot be null and startTime must be before endTIme.");
+    public void stop() {
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimeRemaining = 0;
+            mTotalTimeInMillis = 0;
+            updateText(0);
+            invalidate();
         }
-        mStartTime = startTime;
-        start(endTime);
     }
 
     private void updateText(long timeRemaining) {
@@ -294,25 +298,13 @@ public class TickTockView extends View {
                     mTextPaint.getTextBounds(text, 0, text.length(), mTextBounds);
                 }
                 mText = text;
+                invalidate();
             }
         }
     }
 
-    /**
-     * Remove stop the timer.
-     */
-    public void stop() {
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
-        mStartTime = null;
-        mEndTime = null;
-    }
-
     private void fitText(CharSequence text) {
-        if (TextUtils.isEmpty(text)) {
-            return;
-        }
+        if (TextUtils.isEmpty(text)) { return; }
         if (mAutoFitText) {
             float textWidth = mFillPaint.measureText(text.toString());
             float multi = ((mRingRadius * 2) - mTextPadding * 2) / textWidth;
@@ -324,9 +316,7 @@ public class TickTockView extends View {
 
     @Override
     protected void onDetachedFromWindow() {
-        if (mTimer != null) {
-
-        }
+        if (mTimer != null) { this.stop(); }
         super.onDetachedFromWindow();
     }
 
