@@ -1,4 +1,4 @@
-package com.amendgit.chronus;
+package com.amendgit.chronos;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

@@ -1,4 +1,4 @@
-package com.amendgit.chronus;
+package com.amendgit.chronos;
 
 /**
  * Created by Ali Muzaffar on 10/03/2016.
