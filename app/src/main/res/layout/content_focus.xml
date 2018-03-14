@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
-    tools:context="com.amendgit.chronus.com.amendgit.chronos.FocusActivity"
+    tools:context="com.amendgit.chronos.com.amendgit.chronos.FocusActivity"
     tools:showIn="@layout/activity_focus">
 
     <com.amendgit.chronos.TickTockView

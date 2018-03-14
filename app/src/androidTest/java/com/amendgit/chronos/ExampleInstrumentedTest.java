@@ -1,4 +1,4 @@
-package com.amendgit.chronus;
+package com.amendgit.chronos;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

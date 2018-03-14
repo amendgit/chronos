@@ -1,4 +1,4 @@
-package com.amendgit.chronus;
+package com.amendgit.chronos;
 
 import org.junit.Test;
 
