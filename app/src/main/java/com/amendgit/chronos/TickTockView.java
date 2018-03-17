@@ -135,38 +135,36 @@ public class TickTockView extends View {
         calculateEverything();
     }
 
-    private void calculateEverything() {
-        calculateCenter();
-        calculateArc();
+    public void start(long timeInMillis) {
+        mTotalTimeInMillis = timeInMillis;
+        if (mTimer != null) { mTimer.cancel(); mTimer = null; }
+        this.startCountDownTimer(mTotalTimeInMillis);
     }
 
-    private void drawInitialCircle() {
-        if (mCanvas == null ||
-            mCanvasBitmap.getWidth() != this.getWidth() ||
-            mCanvasBitmap.getHeight() != this.getHeight()) {
-            if (mCanvasBitmap != null) {
-                mCanvas = null;
-                mCanvasBitmap.recycle();
-                mCanvasBitmap = null;
-            }
-            mCanvasBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-            mCanvas = new Canvas(mCanvasBitmap);
+    public void pause() {
+        mTimer.cancel();
+    }
+
+    public void resume() {
+        this.startCountDownTimer(mTimeRemaining);
+    }
+
+    public void stop() {
+        if (mTimer != null) {
+            mTimer.cancel();
         }
-
-        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        mCanvas.drawCircle(mCenter.x, mCenter.y, mRingRadius, mEmptyPaint);
+        mTimeRemaining = 0;
+        mTotalTimeInMillis = 0;
+        this.updateTickText(0);
     }
 
-    private void calculateCenter() {
-        mCenter.x = ((getWidth() + getPaddingLeft()) - getPaddingRight()) / 2;
-        mCenter.y = ((getHeight() + getPaddingTop()) - getPaddingBottom()) / 2;
+    public interface TickTockDelegate {
+        String getTickText(long timeRemainingInMillis);
+        void onTickFinish();
     }
 
-    private void calculateArc() {
-        mArc.left   = mCenter.x - mRingRadius;
-        mArc.top    = mCenter.y - mRingRadius;
-        mArc.right  = mCenter.x + mRingRadius;
-        mArc.bottom = mCenter.y + mRingRadius;
+    public void setOnTickDelegate(TickTockDelegate l) {
+        mTickDelegate = l;
     }
 
     @Override
@@ -242,18 +240,38 @@ public class TickTockView extends View {
         mCanvas.drawCircle(centerX, centerY, mDotRadius, mFillPaint);
     }
 
-    public void start(long timeInMillis) {
-        mTotalTimeInMillis = timeInMillis;
-        if (mTimer != null) { mTimer.cancel(); mTimer = null; }
-        this.startCountDownTimer(mTotalTimeInMillis);
+    private void calculateEverything() {
+        calculateCenter();
+        calculateArc();
     }
 
-    public void pause() {
-        mTimer.cancel();
+    private void drawInitialCircle() {
+        if (mCanvas == null ||
+                mCanvasBitmap.getWidth() != this.getWidth() ||
+                mCanvasBitmap.getHeight() != this.getHeight()) {
+            if (mCanvasBitmap != null) {
+                mCanvas = null;
+                mCanvasBitmap.recycle();
+                mCanvasBitmap = null;
+            }
+            mCanvasBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            mCanvas = new Canvas(mCanvasBitmap);
+        }
+
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        mCanvas.drawCircle(mCenter.x, mCenter.y, mRingRadius, mEmptyPaint);
     }
 
-    public void resume() {
-        this.startCountDownTimer(mTimeRemaining);
+    private void calculateCenter() {
+        mCenter.x = ((getWidth() + getPaddingLeft()) - getPaddingRight()) / 2;
+        mCenter.y = ((getHeight() + getPaddingTop()) - getPaddingBottom()) / 2;
+    }
+
+    private void calculateArc() {
+        mArc.left   = mCenter.x - mRingRadius;
+        mArc.top    = mCenter.y - mRingRadius;
+        mArc.right  = mCenter.x + mRingRadius;
+        mArc.bottom = mCenter.y + mRingRadius;
     }
 
     private void startCountDownTimer(long millis) {
@@ -264,18 +282,6 @@ public class TickTockView extends View {
             @Override
             public void onFinish() { onTickFinish(); }
         }.start();
-    }
-
-    /**
-     * Remove stop the timer.
-     */
-    public void stop() {
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
-        mTimeRemaining = 0;
-        mTotalTimeInMillis = 0;
-        this.updateTickText(0);
     }
 
     private void updateTickText(long millis) {
@@ -319,18 +325,5 @@ public class TickTockView extends View {
         super.onDetachedFromWindow();
     }
 
-    /**
-     * Listen for tick events.
-     * @param l OnTickListener
-     */
-    public void setOnTickDelegate(TickTockDelegate l) {
-        mTickDelegate = l;
-    }
-
     private CountDownTimer mTimer = null;
-
-    public interface TickTockDelegate {
-        String getTickText(long timeRemainingInMillis);
-        void onTickFinish();
-    }
 }
