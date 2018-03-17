@@ -1,6 +1,9 @@
 package com.amendgit.chronos;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +17,9 @@ public class FocusActivity extends AppCompatActivity {
     Button mPauseButton;
     Button mResumeButton;
     Button mStopButton;
+
     final String TAG = "FocusActivity";
+    final String NOTIFICATION_CHANNEL_ID = "focus_notification_channel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,7 @@ public class FocusActivity extends AppCompatActivity {
             @Override
             public void onTickFinish() {
                 onStopFocus();
+                showNotification();
             }
         });
 
@@ -103,5 +109,17 @@ public class FocusActivity extends AppCompatActivity {
         mPauseButton.setVisibility(View.GONE);
         mResumeButton.setVisibility(View.GONE);
         mStopButton.setVisibility(View.GONE);
+    }
+
+    void showNotification() {
+        NotificationManager notificationManager = (NotificationManager)this.getSystemService(this.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = builder
+                .setContentTitle("专注")
+                .setContentText("一段美好的专注时光已经完成。")
+                .setAutoCancel(true)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .build();
+        notificationManager.notify(1, notification);
     }
 }
