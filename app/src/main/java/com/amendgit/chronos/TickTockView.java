@@ -245,17 +245,7 @@ public class TickTockView extends View {
     public void start(long timeInMillis) {
         mTotalTimeInMillis = timeInMillis;
         if (mTimer != null) { mTimer.cancel(); mTimer = null; }
-        mTimer = new CountDownTimer(mTotalTimeInMillis, 16) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                onTickTock(millisUntilFinished);
-            }
-
-            @Override
-            public void onFinish() {
-                onTickFinish();
-            }
-        }.start();
+        this.startCountDownTimer(mTotalTimeInMillis);
     }
 
     public void pause() {
@@ -263,16 +253,16 @@ public class TickTockView extends View {
     }
 
     public void resume() {
-        mTimer = new CountDownTimer(mTimeRemaining, 16) {
+        this.startCountDownTimer(mTimeRemaining);
+    }
+
+    private void startCountDownTimer(long millis) {
+        mTimer = new CountDownTimer(millis, 16) {
             @Override
-            public void onTick(long millisUntilFinished) {
-                onTickTock(millisUntilFinished);
-            }
+            public void onTick(long millisUntilFinished) { onTickTock(millisUntilFinished); }
 
             @Override
-            public void onFinish() {
-                onTickFinish();
-            }
+            public void onFinish() { onTickFinish(); }
         }.start();
     }
 
@@ -282,22 +272,24 @@ public class TickTockView extends View {
     public void stop() {
         if (mTimer != null) {
             mTimer.cancel();
-            mTimeRemaining = 0;
-            mTotalTimeInMillis = 0;
-            this.updateTickText(0);
         }
+        mTimeRemaining = 0;
+        mTotalTimeInMillis = 0;
+        this.updateTickText(0);
     }
 
     private void updateTickText(long millis) {
-        if (mTickDelegate != null) {
-            String text = mTickDelegate.getTickText(millis);
-            if (!TextUtils.isEmpty(text)) {
-                if (mText != null && mText.length() != text.length()) {
-                    mTextPaint.getTextBounds(text, 0, text.length(), mTextBounds);
-                }
-                mText = text;
-                invalidate();
+        if (mTickDelegate == null) {
+            return;
+        }
+
+        String text = mTickDelegate.getTickText(millis);
+        if (!TextUtils.isEmpty(text)) {
+            if (mText != null && mText.length() != text.length()) {
+                mTextPaint.getTextBounds(text, 0, text.length(), mTextBounds);
             }
+            mText = text;
+            invalidate();
         }
     }
 
