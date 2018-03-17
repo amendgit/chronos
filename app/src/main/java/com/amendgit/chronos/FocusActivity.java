@@ -33,7 +33,7 @@ public class FocusActivity extends AppCompatActivity {
 
             @Override
             public void onTickFinish() {
-                Log.d(TAG, "Tick tock finished.");
+                onStopFocus();
             }
         });
 
