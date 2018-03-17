@@ -22,10 +22,8 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public class TickTockView extends View {
     private Paint mFillPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -61,11 +59,13 @@ public class TickTockView extends View {
     private boolean mCounterClockwise = false;
     private boolean mAutoFitText = true;
 
-    private OnTickListener mTickListener;
+    private TickTockDelegate mTickListener;
 
     private final int DURATION_MINUTE = 0;
     private final int DURATION_TOTAL = 1;
     private int mCircleDuration = DURATION_MINUTE;
+
+    final String TAG = "TickTockView";
 
     public TickTockView(Context context) {
         super(context);
@@ -249,12 +249,13 @@ public class TickTockView extends View {
         mTimer = new CountDownTimer(mTotalTimeInMillis, 16) {
             @Override
             public void onTick(long millisUntilFinished) {
-                updateText(mTimeRemaining = millisUntilFinished);
+                updateTickText(mTimeRemaining = millisUntilFinished);
             }
 
             @Override
             public void onFinish() {
-                updateText(0);
+                Log.d(TAG, "countDownTimer finished.");
+                updateTickText(0);
             }
         }.start();
     }
@@ -267,12 +268,13 @@ public class TickTockView extends View {
         mTimer = new CountDownTimer(mTimeRemaining, 16) {
             @Override
             public void onTick(long millisUntilFinished) {
-                updateText(mTimeRemaining = millisUntilFinished);
+                updateTickText(mTimeRemaining = millisUntilFinished);
             }
 
             @Override
             public void onFinish() {
-                updateText(0);
+                Log.d(TAG, "countDownTimer finished.");
+                updateTickText(0);
             }
         }.start();
     }
@@ -285,14 +287,14 @@ public class TickTockView extends View {
             mTimer.cancel();
             mTimeRemaining = 0;
             mTotalTimeInMillis = 0;
-            updateText(0);
+            updateTickText(0);
             invalidate();
         }
     }
 
-    private void updateText(long timeRemaining) {
+    private void updateTickText(long timeRemaining) {
         if (mTickListener != null) {
-            String text = mTickListener.getText(timeRemaining);
+            String text = mTickListener.getTickText(timeRemaining);
             if (!TextUtils.isEmpty(text)) {
                 if (mText != null && mText.length() != text.length()) {
                     mTextPaint.getTextBounds(text, 0, text.length(), mTextBounds);
@@ -325,13 +327,13 @@ public class TickTockView extends View {
      *
      * @param l OnTickListener
      */
-    public void setOnTickListener(OnTickListener l) {
+    public void setOnTickDelegate(TickTockDelegate l) {
         mTickListener = l;
     }
 
     private CountDownTimer mTimer = null;
 
-    public interface OnTickListener {
-        String getText(long timeRemainingInMillis);
+    public interface TickTockDelegate {
+        String getTickText(long timeRemainingInMillis);
     }
 }

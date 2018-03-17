@@ -33,52 +33,25 @@ public class FocusActivity extends AppCompatActivity {
         mStartButton = findViewById(R.id.start_button);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                long countDownIntervalInMillis = 60 * 1000;
-                if (mCountDownView != null) {
-                    mCountDownView.start(countDownIntervalInMillis);
-                    mStartButton.setVisibility(View.GONE);
-                    mPauseButton.setVisibility(View.VISIBLE);
-                    mResumeButton.setVisibility(View.GONE);
-                    mStopButton.setVisibility(View.GONE);
-                }
-            }
+            public void onClick(View view) { onStartFocus(); }
         });
 
         mPauseButton = findViewById(R.id.pause_button);
         mPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mCountDownView.pause();
-                mStartButton.setVisibility(View.GONE);
-                mPauseButton.setVisibility(View.GONE);
-                mResumeButton.setVisibility(View.VISIBLE);
-                mStopButton.setVisibility(View.VISIBLE);
-            }
+            public void onClick(View view) { onPauseFocus(); }
         });
 
         mResumeButton = findViewById(R.id.resume_button);
         mResumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mCountDownView.resume();
-                mStartButton.setVisibility(View.GONE);
-                mPauseButton.setVisibility(View.VISIBLE);
-                mResumeButton.setVisibility(View.GONE);
-                mStopButton.setVisibility(View.GONE);
-            }
+            public void onClick(View view) { onResumeFocus(); }
         });
 
         mStopButton = findViewById(R.id.stop_button);
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mCountDownView.stop();
-                mStartButton.setVisibility(View.VISIBLE);
-                mPauseButton.setVisibility(View.GONE);
-                mResumeButton.setVisibility(View.GONE);
-                mStopButton.setVisibility(View.GONE);
-            }
+            public void onClick(View view) { onStopFocus(); }
         });
     }
 
@@ -90,6 +63,38 @@ public class FocusActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    void onStartFocus() {
+        long countDownIntervalInMillis = 60 * 1000;
+        mCountDownView.start(countDownIntervalInMillis);
+        mStartButton.setVisibility(View.GONE);
+        mPauseButton.setVisibility(View.VISIBLE);
+        mResumeButton.setVisibility(View.GONE);
+        mStopButton.setVisibility(View.GONE);
+    }
+
+    void onPauseFocus() {
+        mCountDownView.pause();
+        mStartButton.setVisibility(View.GONE);
+        mPauseButton.setVisibility(View.GONE);
+        mResumeButton.setVisibility(View.VISIBLE);
+        mStopButton.setVisibility(View.VISIBLE);
+    }
+
+    void onResumeFocus() {
+        mCountDownView.resume();
+        mStartButton.setVisibility(View.GONE);
+        mPauseButton.setVisibility(View.VISIBLE);
+        mResumeButton.setVisibility(View.GONE);
+        mStopButton.setVisibility(View.GONE);
+    }
+
+    void onStopFocus() {
         mCountDownView.stop();
+        mStartButton.setVisibility(View.VISIBLE);
+        mPauseButton.setVisibility(View.GONE);
+        mResumeButton.setVisibility(View.GONE);
+        mStopButton.setVisibility(View.GONE);
     }
 }
