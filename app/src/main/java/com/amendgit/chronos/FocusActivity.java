@@ -2,6 +2,7 @@ package com.amendgit.chronos;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,20 +14,26 @@ public class FocusActivity extends AppCompatActivity {
     Button mPauseButton;
     Button mResumeButton;
     Button mStopButton;
+    final String TAG = "FocusActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_focus);
+        super.setContentView(R.layout.activity_focus);
 
-        mCountDownView = findViewById(R.id.ticktock_countdown_view);
-        mCountDownView.setOnTickListener(new TickTockView.OnTickListener() {
+        mCountDownView = super.findViewById(R.id.ticktock_countdown_view);
+        mCountDownView.setOnTickDelegate(new TickTockView.TickTockDelegate() {
             @Override
-            public String getText(long timeRemainingInMillis) {
+            public String getTickText(long timeRemainingInMillis) {
                 int s = (int) ( timeRemainingInMillis /  1000)            % 60;
                 int m = (int) ((timeRemainingInMillis / (1000 * 60))      % 60);
                 int h = (int) ((timeRemainingInMillis / (1000 * 60 * 60)) % 24);
                 return String.format(Locale.CHINESE,"%1$02d:%2$02d:%3$02d", h, m, s);
+            }
+
+            @Override
+            public void onTickFinish() {
+                Log.d(TAG, "Tick tock finished.");
             }
         });
 
@@ -66,7 +73,7 @@ public class FocusActivity extends AppCompatActivity {
     }
 
     void onStartFocus() {
-        long countDownIntervalInMillis = 60 * 1000;
+        long countDownIntervalInMillis = 10 * 1000;
         mCountDownView.start(countDownIntervalInMillis);
         mStartButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.VISIBLE);
