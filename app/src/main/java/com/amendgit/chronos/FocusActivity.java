@@ -2,21 +2,21 @@ package com.amendgit.chronos;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import java.util.Locale;
 
 public class FocusActivity extends AppCompatActivity {
-    TickTockView mCountDownView;
-    Button mStartButton;
-    Button mPauseButton;
-    Button mResumeButton;
-    Button mStopButton;
+    private TickTockView mCountDownView;
+    private Button mStartButton;
+    private Button mPauseButton;
+    private Button mResumeButton;
+    private Button mStopButton;
 
     final String TAG = "FocusActivity";
     final String NOTIFICATION_CHANNEL_ID = "focus_notification_channel";
@@ -39,7 +39,8 @@ public class FocusActivity extends AppCompatActivity {
             @Override
             public void onTickFinish() {
                 onStopFocus();
-                showNotification();
+                showFocusFinishedNotification();
+                playFocusFinishedSound();
             }
         });
 
@@ -68,18 +69,8 @@ public class FocusActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     void onStartFocus() {
-        long countDownIntervalInMillis = 10 * 1000;
+        long countDownIntervalInMillis = 30 * 60 * 1000;
         mCountDownView.start(countDownIntervalInMillis);
         mStartButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.VISIBLE);
@@ -111,7 +102,7 @@ public class FocusActivity extends AppCompatActivity {
         mStopButton.setVisibility(View.GONE);
     }
 
-    void showNotification() {
+    void showFocusFinishedNotification() {
         NotificationManager notificationManager = (NotificationManager)this.getSystemService(this.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         Notification notification = builder
@@ -121,5 +112,10 @@ public class FocusActivity extends AppCompatActivity {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build();
         notificationManager.notify(1, notification);
+    }
+
+    void playFocusFinishedSound() {
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beat);
+        mediaPlayer.start();
     }
 }
