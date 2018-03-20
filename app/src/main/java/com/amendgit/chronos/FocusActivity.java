@@ -3,11 +3,13 @@ package com.amendgit.chronos;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RemoteViews;
 
 import java.util.Locale;
 
@@ -40,7 +42,6 @@ public class FocusActivity extends AppCompatActivity {
             public void onTickFinish() {
                 onStopFocus();
                 showFocusFinishedNotification();
-                playFocusFinishedSound();
             }
         });
 
@@ -70,7 +71,7 @@ public class FocusActivity extends AppCompatActivity {
     }
 
     void onStartFocus() {
-        long countDownIntervalInMillis = 30 * 60 * 1000;
+        long countDownIntervalInMillis = 10 * 1000;
         mCountDownView.start(countDownIntervalInMillis);
         mStartButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.VISIBLE);
@@ -103,18 +104,20 @@ public class FocusActivity extends AppCompatActivity {
     }
 
     void showFocusFinishedNotification() {
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_focus);
+
         NotificationManager notificationManager = (NotificationManager)this.getSystemService(this.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         Notification notification = builder
                 .setContentTitle("专注")
-                .setContentText("一段美好的专注时光已经完成。")
+                .setContentText("一段美好的专注时光已经完成")
+                .setContent(remoteViews)
                 .setAutoCancel(true)
+                // .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.beat))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build();
         notificationManager.notify(1, notification);
-    }
 
-    void playFocusFinishedSound() {
         MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beat);
         mediaPlayer.start();
     }
