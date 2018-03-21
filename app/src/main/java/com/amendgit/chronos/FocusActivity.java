@@ -118,6 +118,7 @@ public class FocusActivity extends AppCompatActivity {
                 .build();
         notificationManager.notify(1, notification);
 
+        // TODO: try to play the sound even the device is on mute.
         MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beat);
         mediaPlayer.start();
     }
