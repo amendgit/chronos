@@ -104,6 +104,10 @@ public class FocusActivity extends AppCompatActivity {
     }
 
     void showFocusFinishedNotification() {
+        // TODO: try to play the sound even the device is on mute.
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beat);
+        mediaPlayer.start();
+
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_focus);
 
         NotificationManager notificationManager = (NotificationManager)this.getSystemService(this.NOTIFICATION_SERVICE);
@@ -113,13 +117,9 @@ public class FocusActivity extends AppCompatActivity {
                 .setContentText("一段美好的专注时光已经完成")
                 .setContent(remoteViews)
                 .setAutoCancel(true)
-                // .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.beat))
+                .setVibrate(new long[]{500})
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build();
         notificationManager.notify(1, notification);
-
-        // TODO: try to play the sound even the device is on mute.
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beat);
-        mediaPlayer.start();
     }
 }
