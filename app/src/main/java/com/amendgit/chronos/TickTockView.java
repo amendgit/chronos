@@ -285,11 +285,7 @@ public class TickTockView extends View {
     }
 
     private void updateTickText(long millis) {
-        if (mTickDelegate == null) {
-            return;
-        }
-
-        String text = mTickDelegate.getTickText(millis);
+        String text = TimeUtil.millisToLabel(millis);
         if (!TextUtils.isEmpty(text)) {
             if (mText != null && mText.length() != text.length()) {
                 mTextPaint.getTextBounds(text, 0, text.length(), mTextBounds);
@@ -297,6 +293,15 @@ public class TickTockView extends View {
             mText = text;
             invalidate();
         }
+    }
+
+    public void setRemainMillis(long millis) {
+        mTimeRemaining = millis;
+        this.updateTickText(millis);
+    }
+
+    public void setTotalMillis(long millis) {
+        mTotalTimeInMillis = millis;
     }
 
     private void onTickTock(long millis) {

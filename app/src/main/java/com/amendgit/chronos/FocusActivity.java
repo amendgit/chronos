@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.Locale;
-
 public class FocusActivity extends AppCompatActivity {
     private TickTockView mCountDownView;
     private Button mStartButton;
@@ -22,74 +20,75 @@ public class FocusActivity extends AppCompatActivity {
         super.setContentView(R.layout.activity_focus);
         FocusNotification.startForeground(this);
 
-        mCountDownView = super.findViewById(R.id.ticktock_countdown_view);
-        mCountDownView.setOnTickDelegate(new TickTockView.TickTockDelegate() {
+        FocusController.getInstance().addDelegate(new FocusController.FocusDelegate() {
             @Override
-            public String getTickText(long timeRemainingInMillis) {
-                int s = (int) ( timeRemainingInMillis /  1000)            % 60;
-                int m = (int) ((timeRemainingInMillis / (1000 * 60))      % 60);
-                int h = (int) ((timeRemainingInMillis / (1000 * 60 * 60)) % 24);
-                return String.format(Locale.CHINESE,"%1$02d:%2$02d:%3$02d", h, m, s);
+            public void onTick(long remainMillis) {
+                mCountDownView.setTotalMillis(FocusController.getInstance().getTotalMillis());
+                mCountDownView.setRemainMillis(remainMillis);
             }
 
             @Override
-            public void onTickFinish() {
-                onStopFocus();
+            public void onFinish() {
+                displayStopUI();
+            }
+
+            @Override
+            public void onStateChange(FocusState state) {
+                if (state == FocusState.RUN) {
+                    displayRunUI();
+                } else if (state == FocusState.PAUSE) {
+                    displayPauseUI();
+                } else if (state == FocusState.STOP) {
+                    displayStopUI();
+                }
             }
         });
+
+        mCountDownView = super.findViewById(R.id.ticktock_countdown_view);
 
         mStartButton = findViewById(R.id.start_button);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { onStartFocus(); }
+            public void onClick(View view) {
+                long countDownIntervalInMillis = 10 * 1000;
+                FocusController.getInstance().start(countDownIntervalInMillis);
+            }
         });
 
         mPauseButton = findViewById(R.id.pause_button);
         mPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { onPauseFocus(); }
+            public void onClick(View view) { FocusController.getInstance().pause(); }
         });
 
         mResumeButton = findViewById(R.id.resume_button);
         mResumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { onResumeFocus(); }
+            public void onClick(View view) { FocusController.getInstance().resume();  }
         });
 
         mStopButton = findViewById(R.id.stop_button);
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { onStopFocus(); }
+            public void onClick(View view) { FocusController.getInstance().stop(); }
         });
     }
 
-    void onStartFocus() {
-        long countDownIntervalInMillis = 10 * 1000;
-        mCountDownView.start(countDownIntervalInMillis);
+    void displayRunUI() {
         mStartButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.VISIBLE);
         mResumeButton.setVisibility(View.GONE);
         mStopButton.setVisibility(View.GONE);
     }
 
-    void onPauseFocus() {
-        mCountDownView.pause();
+    void displayPauseUI() {
         mStartButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.GONE);
         mResumeButton.setVisibility(View.VISIBLE);
         mStopButton.setVisibility(View.VISIBLE);
     }
 
-    void onResumeFocus() {
-        mCountDownView.resume();
-        mStartButton.setVisibility(View.GONE);
-        mPauseButton.setVisibility(View.VISIBLE);
-        mResumeButton.setVisibility(View.GONE);
-        mStopButton.setVisibility(View.GONE);
-    }
-
-    void onStopFocus() {
-        mCountDownView.stop();
+    void displayStopUI() {
         mStartButton.setVisibility(View.VISIBLE);
         mPauseButton.setVisibility(View.GONE);
         mResumeButton.setVisibility(View.GONE);

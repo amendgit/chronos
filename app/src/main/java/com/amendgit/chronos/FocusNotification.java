@@ -16,7 +16,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 public class FocusNotification extends Service {
-    final static String TAG = "FocusNotification";
+    // final static String TAG = "FocusNotification";
 
     @Override
     public void onDestroy() {
@@ -37,7 +37,7 @@ public class FocusNotification extends Service {
         }
 
         /*
-        if (intent.getAction().equals(Constants.STARTFOREGROUND_ACTION)) {
+        if (intent.getAction().equals(Constants.START_FOREGROUND_ACTION)) {
             Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         } else if (intent.getAction().equals(Constants.ACTION_STOP)) {
             Toast.makeText(this, "Clicked Previous", Toast.LENGTH_SHORT).show();
@@ -48,9 +48,9 @@ public class FocusNotification extends Service {
         } else if (intent.getAction().equals(Constants.ACTION_NEXT)) {
             Toast.makeText(this, "Clicked Next", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "Clicked Next");
-        } else if (intent.getAction().equals(Constants.STOPFOREGROUND_ACTION)) {
+        } else if (intent.getAction().equals(Constants.STOP_FOREGROUND_ACTION)) {
             Log.i(TAG, "Received Stop Foreground Intent");
-            Toast.makeText(this, "Service Stoped", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Service Stop", Toast.LENGTH_SHORT).show();
             stopForeground(true);
             stopSelf();
         }
