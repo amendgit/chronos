@@ -15,8 +15,8 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-public class FocusService extends Service {
-    final static String TAG = "FocusService";
+public class FocusNotification extends Service {
+    final static String TAG = "FocusNotification";
 
     @Override
     public void onDestroy() {
@@ -63,7 +63,7 @@ public class FocusService extends Service {
         mediaPlayer.start();
 
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_focus);
-        Intent playIntent = new Intent(this, FocusService.class);
+        Intent playIntent = new Intent(this, FocusNotification.class);
         playIntent.setAction(Constants.ACTION_START);
         PendingIntent startPendingIntent = PendingIntent.getService(this, 0, playIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.start, startPendingIntent);
@@ -76,7 +76,7 @@ public class FocusService extends Service {
     }
 
     public static void startForeground(Context context) {
-        Intent serviceIntent = new Intent(context, FocusService.class);
+        Intent serviceIntent = new Intent(context, FocusNotification.class);
         serviceIntent.setAction(Constants.ACTION_START_FOREGROUND);
         context.startService(serviceIntent);
     }

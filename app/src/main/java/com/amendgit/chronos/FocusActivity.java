@@ -20,7 +20,7 @@ public class FocusActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_focus);
-        FocusService.startForeground(this);
+        FocusNotification.startForeground(this);
 
         mCountDownView = super.findViewById(R.id.ticktock_countdown_view);
         mCountDownView.setOnTickDelegate(new TickTockView.TickTockDelegate() {
