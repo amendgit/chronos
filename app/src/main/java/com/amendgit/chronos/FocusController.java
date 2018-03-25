@@ -1,10 +1,8 @@
 package com.amendgit.chronos;
 
 import android.os.CountDownTimer;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * Created by jash on 25/03/2018.
@@ -15,12 +13,12 @@ public class FocusController {
 
     private CountDownTimer mCountDownTimer;
     private FocusState mState;
-    private long mRemainMillis;
-    private long mTotalMillis;
+    private long mRemainTimerInterval;
+    private long mTotalTimerInterval;
     private ArrayList<FocusDelegate> mDelegates;
 
     private FocusController() {
-        mRemainMillis = 0;
+        mRemainTimerInterval = 0;
         mCountDownTimer = null;
         mState = FocusState.STOP;
         mDelegates = new ArrayList<>();
@@ -38,7 +36,7 @@ public class FocusController {
 
     public void start(long totalTimeInterval) {
         this.setState(FocusState.RUN);
-        mTotalMillis = totalTimeInterval;
+        mTotalTimerInterval = totalTimeInterval;
         mCountDownTimer = buildCountDownTimer(totalTimeInterval);
     }
 
@@ -49,7 +47,7 @@ public class FocusController {
 
     public void resume() {
         this.setState(FocusState.RUN);
-        mCountDownTimer = buildCountDownTimer(mRemainMillis);
+        mCountDownTimer = buildCountDownTimer(mRemainTimerInterval);
     }
 
     public void stop() {
@@ -61,7 +59,7 @@ public class FocusController {
         return new CountDownTimer(remainTimeInterval, 32) {
             @Override
             public void onTick(long l) {
-                mRemainMillis = l;
+                mRemainTimerInterval = l;
                 for (FocusDelegate delegate : mDelegates) {
                     delegate.onTick(l);
                 }
@@ -87,8 +85,8 @@ public class FocusController {
         return mState;
     }
 
-    public long getTotalMillis() {
-        return mTotalMillis;
+    public long getTotalTimeInterval() {
+        return mTotalTimerInterval;
     }
 
     public void addDelegate(FocusDelegate delegate) {

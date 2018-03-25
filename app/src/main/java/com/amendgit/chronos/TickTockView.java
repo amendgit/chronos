@@ -295,12 +295,12 @@ public class TickTockView extends View {
         }
     }
 
-    public void setRemainMillis(long millis) {
+    public void setRemainTimerInterval(long millis) {
         mTimeRemaining = millis;
         this.updateTickText(millis);
     }
 
-    public void setTotalMillis(long millis) {
+    public void setTotalTimerInterval(long millis) {
         mTotalTimeInMillis = millis;
     }
 
