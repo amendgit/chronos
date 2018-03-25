@@ -99,25 +99,36 @@ public class FocusNotification extends Service {
     }
 
     void displayReadyUI() {
-        Log.d(TAG, "show focus ui");
         mRemoteViews.setViewVisibility(R.id.start_group, View.VISIBLE);
         mRemoteViews.setViewVisibility(R.id.pause_group, View.GONE);
         mRemoteViews.setViewVisibility(R.id.resume_stop_group, View.GONE);
+        mTimeLabelText = "00:00:00";
+        mRemoteViews.setTextViewText(R.id.time_label, mTimeLabelText);
         mNotificationManager.notify(1, mNotificationBuilder.build());
     }
 
     void startForeground() {
         mRemoteViews = new RemoteViews(getPackageName(), R.layout.notification_focus);
 
-        Intent playIntent = new Intent(this, FocusNotification.class);
-        playIntent.setAction(Constants.ACTION_START);
-        PendingIntent startPendingIntent = PendingIntent.getService(this, 0, playIntent, 0);
+        Intent startIntent = new Intent(this, FocusNotification.class);
+        startIntent.setAction(Constants.ACTION_START);
+        PendingIntent startPendingIntent = PendingIntent.getService(this, 0, startIntent, 0);
         mRemoteViews.setOnClickPendingIntent(R.id.start_button, startPendingIntent);
 
         Intent pauseIntent = new Intent(this, FocusNotification.class);
         pauseIntent.setAction(Constants.ACTION_PAUSE);
         PendingIntent pausePendingIntent = PendingIntent.getService(this, 0, pauseIntent, 0);
         mRemoteViews.setOnClickPendingIntent(R.id.pause_button, pausePendingIntent);
+
+        Intent resumeIntent = new Intent(this, FocusNotification.class);
+        resumeIntent.setAction(Constants.ACTION_RESUME);
+        PendingIntent resumePendingIntent = PendingIntent.getService(this, 0, resumeIntent, 0);
+        mRemoteViews.setOnClickPendingIntent(R.id.resume_button, resumePendingIntent);
+
+        Intent stopIntent = new Intent(this, FocusNotification.class);
+        stopIntent.setAction(Constants.ACTION_STOP);
+        PendingIntent stopPendingIntent = PendingIntent.getService(this, 0, stopIntent, 0);
+        mRemoteViews.setOnClickPendingIntent(R.id.stop_button, stopPendingIntent);
 
         mNotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID_FOCUS);
