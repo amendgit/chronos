@@ -1,15 +1,9 @@
 package com.amendgit.chronos;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RemoteViews;
 
 import java.util.Locale;
 
@@ -21,12 +15,12 @@ public class FocusActivity extends AppCompatActivity {
     private Button mStopButton;
 
     final String TAG = "FocusActivity";
-    final String NOTIFICATION_CHANNEL_ID = "focus_notification_channel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_focus);
+        FocusService.startForeground(this);
 
         mCountDownView = super.findViewById(R.id.ticktock_countdown_view);
         mCountDownView.setOnTickDelegate(new TickTockView.TickTockDelegate() {
@@ -41,7 +35,6 @@ public class FocusActivity extends AppCompatActivity {
             @Override
             public void onTickFinish() {
                 onStopFocus();
-                showFocusFinishedNotification();
             }
         });
 
@@ -101,25 +94,5 @@ public class FocusActivity extends AppCompatActivity {
         mPauseButton.setVisibility(View.GONE);
         mResumeButton.setVisibility(View.GONE);
         mStopButton.setVisibility(View.GONE);
-    }
-
-    void showFocusFinishedNotification() {
-        // TODO: try to play the sound even the device is on mute.
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beat);
-        mediaPlayer.start();
-
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_focus);
-
-        NotificationManager notificationManager = (NotificationManager)this.getSystemService(this.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-        Notification notification = builder
-                .setContentTitle("专注")
-                .setContentText("一段美好的专注时光已经完成")
-                .setContent(remoteViews)
-                .setAutoCancel(true)
-                .setVibrate(new long[]{500})
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .build();
-        notificationManager.notify(1, notification);
     }
 }
