@@ -12,9 +12,9 @@ import android.os.IBinder;
 import android.app.Service;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 public class FocusNotification extends Service {
     final static String TAG = "FocusNotification";
@@ -22,12 +22,17 @@ public class FocusNotification extends Service {
     private RemoteViews mRemoteViews;
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
+    private String mTimeLabelText;
 
     public FocusNotification() {
         FocusController.getInstance().addDelegate(new FocusController.FocusDelegate() {
             @Override
             public void onTick(long remainMillis) {
-                mRemoteViews.setTextViewText(R.id.time_interval_label, TimeUtil.millisToLabel(remainMillis));
+                if (TimeUtil.millisToLabel(remainMillis).equals(mTimeLabelText)) {
+                    return;
+                }
+                mTimeLabelText = TimeUtil.millisToLabel(remainMillis);
+                mRemoteViews.setTextViewText(R.id.time_interval_label, mTimeLabelText);
                 mNotificationManager.notify(1, mNotificationBuilder.build());
             }
 
@@ -39,11 +44,11 @@ public class FocusNotification extends Service {
             @Override
             public void onStateChange(FocusState state) {
                 if (state == FocusState.RUN) {
-                    displayPauseUI();
-                } else if (state == FocusState.PAUSE) {
-                    displayStopUI();
-                } else if (state == FocusState.STOP) {
                     displayRunUI();
+                } else if (state == FocusState.PAUSE) {
+                    displayPauseUI();
+                } else if (state == FocusState.STOP) {
+                    displayStopUI();
                 }
             }
         });
@@ -61,8 +66,7 @@ public class FocusNotification extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, intent.getAction(), Toast.LENGTH_LONG).show();
-
+        Log.d(TAG, intent.getAction());
         if (intent.getAction().equals(Constants.ACTION_START_FOREGROUND)) {
             this.startForeground();
         } else if (intent.getAction().equals(Constants.ACTION_START)) {
@@ -81,23 +85,26 @@ public class FocusNotification extends Service {
     }
 
     void displayRunUI() {
-        mRemoteViews.setViewVisibility(R.id.playGroup, View.VISIBLE);
-        mRemoteViews.setViewVisibility(R.id.pauseGroup, View.GONE);
-        mRemoteViews.setViewVisibility(R.id.resumeAndStopGroup, View.GONE);
-        mNotificationManager.notify(1, mNotificationBuilder.build());
-    }
-
-    void displayPauseUI() {
+        Log.d(TAG, "show resume and stop ui");
         mRemoteViews.setViewVisibility(R.id.playGroup, View.GONE);
         mRemoteViews.setViewVisibility(R.id.pauseGroup, View.VISIBLE);
         mRemoteViews.setViewVisibility(R.id.resumeAndStopGroup, View.GONE);
         mNotificationManager.notify(1, mNotificationBuilder.build());
     }
 
-    void displayStopUI() {
+    void displayPauseUI() {
+        Log.d(TAG, "show pause ui");
         mRemoteViews.setViewVisibility(R.id.playGroup, View.GONE);
         mRemoteViews.setViewVisibility(R.id.pauseGroup, View.GONE);
         mRemoteViews.setViewVisibility(R.id.resumeAndStopGroup, View.VISIBLE);
+        mNotificationManager.notify(1, mNotificationBuilder.build());
+    }
+
+    void displayStopUI() {
+        Log.d(TAG, "show focus ui");
+        mRemoteViews.setViewVisibility(R.id.playGroup, View.VISIBLE);
+        mRemoteViews.setViewVisibility(R.id.pauseGroup, View.GONE);
+        mRemoteViews.setViewVisibility(R.id.resumeAndStopGroup, View.GONE);
         mNotificationManager.notify(1, mNotificationBuilder.build());
     }
 
