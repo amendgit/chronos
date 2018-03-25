@@ -35,7 +35,7 @@ public class FocusNotification extends Service {
                 }
                 mTimeLabelText = TimeUtil.millisToLabel(remainMillis);
                 mRemoteViews.setTextViewText(R.id.time_label, mTimeLabelText);
-                mNotificationManager.notify(Constants.NOTIFICATION_ID_FOCUS, mNotificationBuilder.build());
+                refreshNotificationUI();
             }
 
             @Override
@@ -90,14 +90,14 @@ public class FocusNotification extends Service {
         mRemoteViews.setViewVisibility(R.id.start_group, View.GONE);
         mRemoteViews.setViewVisibility(R.id.pause_group, View.VISIBLE);
         mRemoteViews.setViewVisibility(R.id.resume_stop_group, View.GONE);
-        mNotificationManager.notify(Constants.NOTIFICATION_ID_FOCUS, mNotificationBuilder.build());
+        refreshNotificationUI();
     }
 
     void displaySuspendingUI() {
         mRemoteViews.setViewVisibility(R.id.start_group, View.GONE);
         mRemoteViews.setViewVisibility(R.id.pause_group, View.GONE);
         mRemoteViews.setViewVisibility(R.id.resume_stop_group, View.VISIBLE);
-        mNotificationManager.notify(Constants.NOTIFICATION_ID_FOCUS, mNotificationBuilder.build());
+        refreshNotificationUI();
     }
 
     void displayReadyUI() {
@@ -106,6 +106,10 @@ public class FocusNotification extends Service {
         mRemoteViews.setViewVisibility(R.id.resume_stop_group, View.GONE);
         mTimeLabelText = "00:00:00";
         mRemoteViews.setTextViewText(R.id.time_label, mTimeLabelText);
+        refreshNotificationUI();
+    }
+
+    void refreshNotificationUI() {
         mNotificationManager.notify(Constants.NOTIFICATION_ID_FOCUS, mNotificationBuilder.build());
     }
 
