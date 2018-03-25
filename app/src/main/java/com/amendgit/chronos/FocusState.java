@@ -5,7 +5,7 @@ package com.amendgit.chronos;
  */
 
 public enum FocusState {
-    RUN,
-    PAUSE,
-    STOP,
+    READY,
+    RUNNING,
+    SUSPENDING,
 }

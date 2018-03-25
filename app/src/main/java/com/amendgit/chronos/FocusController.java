@@ -20,7 +20,7 @@ public class FocusController {
     private FocusController() {
         mRemainTimerInterval = 0;
         mCountDownTimer = null;
-        mState = FocusState.STOP;
+        mState = FocusState.READY;
         mDelegates = new ArrayList<>();
     }
 
@@ -35,23 +35,23 @@ public class FocusController {
     }
 
     public void start(long totalTimeInterval) {
-        this.setState(FocusState.RUN);
+        this.setState(FocusState.RUNNING);
         mTotalTimerInterval = totalTimeInterval;
         mCountDownTimer = buildCountDownTimer(totalTimeInterval);
     }
 
     public void pause() {
-        this.setState(FocusState.PAUSE);
+        this.setState(FocusState.SUSPENDING);
         mCountDownTimer.cancel();
     }
 
     public void resume() {
-        this.setState(FocusState.RUN);
+        this.setState(FocusState.RUNNING);
         mCountDownTimer = buildCountDownTimer(mRemainTimerInterval);
     }
 
     public void stop() {
-        this.setState(FocusState.STOP);
+        this.setState(FocusState.READY);
         mCountDownTimer.cancel();
     }
 

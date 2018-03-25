@@ -43,11 +43,11 @@ public class FocusNotification extends Service {
 
             @Override
             public void onStateChange(FocusState state) {
-                if (state == FocusState.RUN) {
+                if (state == FocusState.RUNNING) {
                     displayRunUI();
-                } else if (state == FocusState.PAUSE) {
+                } else if (state == FocusState.SUSPENDING) {
                     displayPauseUI();
-                } else if (state == FocusState.STOP) {
+                } else if (state == FocusState.READY) {
                     displayStopUI();
                 }
             }
