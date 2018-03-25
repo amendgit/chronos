@@ -35,7 +35,7 @@ public class FocusController {
     }
 
     public void start(long totalTimeInterval) {
-        this.setState(FocusState.RUNNING);
+        this.setState(FocusState.FOCUSING);
         mTotalTimerInterval = totalTimeInterval;
         mCountDownTimer = buildCountDownTimer(totalTimeInterval);
     }
@@ -46,7 +46,7 @@ public class FocusController {
     }
 
     public void resume() {
-        this.setState(FocusState.RUNNING);
+        this.setState(FocusState.FOCUSING);
         mCountDownTimer = buildCountDownTimer(mRemainTimerInterval);
     }
 
