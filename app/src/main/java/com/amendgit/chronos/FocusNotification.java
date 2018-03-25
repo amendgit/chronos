@@ -38,17 +38,17 @@ public class FocusNotification extends Service {
 
             @Override
             public void onFinish() {
-                displayStopUI();
+                displayReadyUI();
             }
 
             @Override
             public void onStateChange(FocusState state) {
                 if (state == FocusState.FOCUSING) {
-                    displayRunUI();
+                    displayFocusingUI();
                 } else if (state == FocusState.SUSPENDING) {
-                    displayPauseUI();
+                    displaySuspendingUI();
                 } else if (state == FocusState.READY) {
-                    displayStopUI();
+                    displayReadyUI();
                 }
             }
         });
@@ -84,23 +84,21 @@ public class FocusNotification extends Service {
         return START_STICKY;
     }
 
-    void displayRunUI() {
-        Log.d(TAG, "show resume and stop ui");
+    void displayFocusingUI() {
         mRemoteViews.setViewVisibility(R.id.start_group, View.GONE);
         mRemoteViews.setViewVisibility(R.id.pause_group, View.VISIBLE);
         mRemoteViews.setViewVisibility(R.id.resume_stop_group, View.GONE);
         mNotificationManager.notify(1, mNotificationBuilder.build());
     }
 
-    void displayPauseUI() {
-        Log.d(TAG, "show pause ui");
+    void displaySuspendingUI() {
         mRemoteViews.setViewVisibility(R.id.start_group, View.GONE);
         mRemoteViews.setViewVisibility(R.id.pause_group, View.GONE);
         mRemoteViews.setViewVisibility(R.id.resume_stop_group, View.VISIBLE);
         mNotificationManager.notify(1, mNotificationBuilder.build());
     }
 
-    void displayStopUI() {
+    void displayReadyUI() {
         Log.d(TAG, "show focus ui");
         mRemoteViews.setViewVisibility(R.id.start_group, View.VISIBLE);
         mRemoteViews.setViewVisibility(R.id.pause_group, View.GONE);

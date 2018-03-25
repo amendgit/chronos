@@ -30,7 +30,7 @@ public class FocusActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                displayStopUI();
+                displayReadyUI();
                 MediaPlayer mediaPlayer = MediaPlayer.create(FocusActivity.this, R.raw.beat);
                 mediaPlayer.start();
             }
@@ -38,11 +38,11 @@ public class FocusActivity extends AppCompatActivity {
             @Override
             public void onStateChange(FocusState state) {
                 if (state == FocusState.FOCUSING) {
-                    displayRunUI();
+                    displayFocusingUI();
                 } else if (state == FocusState.SUSPENDING) {
-                    displayPauseUI();
+                    displaySuspendingUI();
                 } else if (state == FocusState.READY) {
-                    displayStopUI();
+                    displayReadyUI();
                 }
             }
         });
@@ -77,21 +77,21 @@ public class FocusActivity extends AppCompatActivity {
         });
     }
 
-    void displayRunUI() {
+    void displayFocusingUI() {
         mStartButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.VISIBLE);
         mResumeButton.setVisibility(View.GONE);
         mStopButton.setVisibility(View.GONE);
     }
 
-    void displayPauseUI() {
+    void displaySuspendingUI() {
         mStartButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.GONE);
         mResumeButton.setVisibility(View.VISIBLE);
         mStopButton.setVisibility(View.VISIBLE);
     }
 
-    void displayStopUI() {
+    void displayReadyUI() {
         mStartButton.setVisibility(View.VISIBLE);
         mPauseButton.setVisibility(View.GONE);
         mResumeButton.setVisibility(View.GONE);
