@@ -23,9 +23,11 @@ public class FocusNotification extends Service {
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
     private String mTimeLabelText;
+    private FocusController mController;
 
     public FocusNotification() {
-        FocusController.getInstance().addDelegate(new FocusController.FocusDelegate() {
+        mController = FocusController.getInstance();
+        mController.addDelegate(new FocusController.FocusDelegate() {
             @Override
             public void onTick(long remainMillis) {
                 if (TimeUtil.millisToLabel(remainMillis).equals(mTimeLabelText)) {
@@ -70,13 +72,13 @@ public class FocusNotification extends Service {
         if (intent.getAction().equals(Constants.ACTION_START_FOREGROUND)) {
             this.startForeground();
         } else if (intent.getAction().equals(Constants.ACTION_START)) {
-            FocusController.getInstance().start(Constants.TIME_INTERVAL_FOCUS);
+            mController.start(Constants.TIME_INTERVAL_FOCUS);
         } else if (intent.getAction().equals(Constants.ACTION_PAUSE)) {
-            FocusController.getInstance().pause();
+            mController.pause();
         } else if (intent.getAction().equals(Constants.ACTION_RESUME)) {
-            FocusController.getInstance().resume();
+            mController.resume();
         } else if (intent.getAction().equals(Constants.ACTION_STOP)) {
-            FocusController.getInstance().stop();
+            mController.stop();
         } else if (intent.getAction().equals(Constants.ACTION_STOP_FOREGROUND)) {
             super.stopForeground(true);
             super.stopSelf();

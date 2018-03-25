@@ -12,6 +12,7 @@ public class FocusActivity extends AppCompatActivity {
     private Button mPauseButton;
     private Button mResumeButton;
     private Button mStopButton;
+    private FocusController mController;
 
     final String TAG = "FocusActivity";
 
@@ -20,8 +21,8 @@ public class FocusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_focus);
         FocusNotification.startForeground(this);
-
-        FocusController.getInstance().addDelegate(new FocusController.FocusDelegate() {
+        mController = FocusController.getInstance();
+        mController.addDelegate(new FocusController.FocusDelegate() {
             @Override
             public void onTick(long remainMillis) {
                 mCountDownView.setTotalTimerInterval(FocusController.getInstance().getTotalTimeInterval());
@@ -54,26 +55,26 @@ public class FocusActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 long countDownIntervalInMillis = 10 * 1000;
-                FocusController.getInstance().start(countDownIntervalInMillis);
+                mController.start(countDownIntervalInMillis);
             }
         });
 
         mPauseButton = findViewById(R.id.pause_button);
         mPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { FocusController.getInstance().pause(); }
+            public void onClick(View view) { mController.pause(); }
         });
 
         mResumeButton = findViewById(R.id.resume_button);
         mResumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { FocusController.getInstance().resume();  }
+            public void onClick(View view) { mController.resume();  }
         });
 
         mStopButton = findViewById(R.id.stop_button);
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { FocusController.getInstance().stop(); }
+            public void onClick(View view) { mController.stop(); }
         });
     }
 
