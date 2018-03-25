@@ -30,10 +30,10 @@ public class FocusNotification extends Service {
         mController.addDelegate(new FocusController.FocusDelegate() {
             @Override
             public void onTick(long remainMillis) {
-                if (TimeUtil.millisToLabel(remainMillis).equals(mTimeLabelText)) {
+                if (DateUtil.millisecondToHHHMMSS(remainMillis).equals(mTimeLabelText)) {
                     return;
                 }
-                mTimeLabelText = TimeUtil.millisToLabel(remainMillis);
+                mTimeLabelText = DateUtil.millisecondToHHHMMSS(remainMillis);
                 mRemoteViews.setTextViewText(R.id.time_label, mTimeLabelText);
                 refreshNotificationUI();
             }

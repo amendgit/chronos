@@ -285,7 +285,7 @@ public class TickTockView extends View {
     }
 
     private void updateTickText(long millis) {
-        String text = TimeUtil.millisToLabel(millis);
+        String text = DateUtil.millisecondToHHHMMSS(millis);
         if (!TextUtils.isEmpty(text)) {
             if (mText != null && mText.length() != text.length()) {
                 mTextPaint.getTextBounds(text, 0, text.length(), mTextBounds);
