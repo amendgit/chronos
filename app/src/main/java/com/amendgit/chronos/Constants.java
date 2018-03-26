@@ -16,5 +16,5 @@ class Constants {
     static String NOTIFICATION_CHANNEL_ID_FOCUS = "com.amendgit.chronos.Constant.NOTIFICATION_CHANNEL_ID_FOCUS";
     static int NOTIFICATION_ID_FOCUS = 1;
 
-    static long TIME_INTERVAL_FOCUS = 10 * 1000;
+    static long TIME_INTERVAL_FOCUS = 30 * 60 * 1000;
 }

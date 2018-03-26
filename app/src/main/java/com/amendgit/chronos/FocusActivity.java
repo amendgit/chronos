@@ -54,8 +54,7 @@ public class FocusActivity extends AppCompatActivity {
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long countDownIntervalInMillis = 10 * 1000;
-                mController.start(countDownIntervalInMillis);
+                mController.start(Constants.TIME_INTERVAL_FOCUS);
             }
         });
 
