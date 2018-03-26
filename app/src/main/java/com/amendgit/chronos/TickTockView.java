@@ -275,13 +275,7 @@ public class TickTockView extends View {
     }
 
     private void startCountDownTimer(long millis) {
-        mTimer = new CountDownTimer(millis, 16) {
-            @Override
-            public void onTick(long millisUntilFinished) { onTickTock(millisUntilFinished); }
-
-            @Override
-            public void onFinish() { onTickFinish(); }
-        }.start();
+        // empty.
     }
 
     private void updateTickText(long millis) {
