@@ -1,3 +1,7 @@
 # Chronos
 
-A android app for record time list and focus.
+A android app for focus.
+
+## Screenshots
+
+![]()
