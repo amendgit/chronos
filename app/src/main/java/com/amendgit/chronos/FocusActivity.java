@@ -39,7 +39,6 @@ public class FocusActivity extends AppCompatActivity {
             }
 
             @Override
-<<<<<<< HEAD
             public void onStateChange(FocusState state) {
                 if (state == FocusState.FOCUSING) {
                     displayFocusingUI();
@@ -48,11 +47,6 @@ public class FocusActivity extends AppCompatActivity {
                 } else if (state == FocusState.READY) {
                     displayReadyUI();
                 }
-=======
-            public void onTickFinish() {
-                onStopFocus();
-                showFocusFinishedNotification();
->>>>>>> 0f1e37b... add custom notification
             }
         });
 
@@ -85,13 +79,7 @@ public class FocusActivity extends AppCompatActivity {
         });
     }
 
-<<<<<<< HEAD
     void displayFocusingUI() {
-=======
-    void onStartFocus() {
-        long countDownIntervalInMillis = 10 * 1000;
-        mCountDownView.start(countDownIntervalInMillis);
->>>>>>> 0f1e37b... add custom notification
         mStartButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.VISIBLE);
         mResumeButton.setVisibility(View.GONE);
@@ -111,26 +99,4 @@ public class FocusActivity extends AppCompatActivity {
         mResumeButton.setVisibility(View.GONE);
         mStopButton.setVisibility(View.GONE);
     }
-<<<<<<< HEAD
-=======
-
-    void showFocusFinishedNotification() {
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_focus);
-
-        NotificationManager notificationManager = (NotificationManager)this.getSystemService(this.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-        Notification notification = builder
-                .setContentTitle("专注")
-                .setContentText("一段美好的专注时光已经完成")
-                .setContent(remoteViews)
-                .setAutoCancel(true)
-                // .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.beat))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .build();
-        notificationManager.notify(1, notification);
-
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beat);
-        mediaPlayer.start();
-    }
->>>>>>> 0f1e37b... add custom notification
 }
