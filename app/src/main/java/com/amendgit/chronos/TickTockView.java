@@ -252,10 +252,6 @@ public class TickTockView extends View {
         mArc.bottom = mCenter.y + mRingRadius;
     }
 
-    private void startCountDownTimer(long millis) {
-        // empty.
-    }
-
     private void updateTickText(long millis) {
         String text = DateUtil.millisecondToHHHMMSS(millis);
         if (!TextUtils.isEmpty(text)) {
