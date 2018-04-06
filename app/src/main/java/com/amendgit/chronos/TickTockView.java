@@ -19,7 +19,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -41,24 +40,21 @@ public class TickTockView extends View {
     private float mRingThickness = 3;
     private float mDotRadius     = 6;
 
-
     private int mEmptyRingColor = Color.WHITE;
     private int mFillRingColor  = Color.BLUE;
     private int mMiddleColor    = Color.TRANSPARENT;
     private int mTextColor      = Color.WHITE;
 
-    private CharSequence mText = null;
+    private CharSequence mTickTockText = null;
     private float mTextSize    = 80;
     private float mTextPadding = 16;
     private Rect mTextBounds   = new Rect();
 
-    private long mTimeRemaining = 0;
-    private long mTotalTimeInMillis = 0;
+    private long mRemainTimeInterval = 0;
+    private long mTotalTimeInterval = 0;
 
     private boolean mCounterClockwise = false;
     private boolean mAutoFitText = true;
-
-    private TickTockDelegate mTickDelegate;
 
     private final int DURATION_MINUTE = 0;
     private final int DURATION_TOTAL = 1;
@@ -106,7 +102,7 @@ public class TickTockView extends View {
             mDotRadius     = ta.getDimension(R.styleable.TickTockView_tickDotRadius,     mDotRadius);
             mTextSize      = ta.getDimension(R.styleable.TickTockView_tickTextSize,      mTextSize);
 
-            mText        = ta.getText(R.styleable.TickTockView_tickText);
+            mTickTockText = ta.getText(R.styleable.TickTockView_tickText);
             mAutoFitText = ta.getBoolean(R.styleable.TickTockView_tickAutoFitText, mAutoFitText);
 
             mCounterClockwise = ta.getBoolean(R.styleable.TickTockView_tickMoveCounterClockwise, mCounterClockwise);
@@ -128,37 +124,24 @@ public class TickTockView extends View {
         mTextPaint.setColor(mTextColor);
         mTextPaint.setTextSize(mTextSize);
 
-        if (isInEditMode()) {
-            fitText(mText);
-        }
-
         calculateEverything();
-    }
-
-    public void start(long timeInMillis) {
-        mTotalTimeInMillis = timeInMillis;
-        this.startCountDownTimer(mTotalTimeInMillis);
-    }
-
-    public interface TickTockDelegate {
-        String getTickText(long timeRemainingInMillis);
-        void onTickFinish();
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (changed) {
-            calculateEverything();
+        if (!changed) {
+            return;
         }
+        calculateEverything();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mRingRadius = ((this.getMeasuredWidth() - this.getPaddingLeft()) / 2) - mDotRadius;
-        if (!TextUtils.isEmpty(mText)) {
-            fitText(mText);
+        if (!TextUtils.isEmpty(mTickTockText)) {
+            fitText(mTickTockText);
         }
     }
 
@@ -170,17 +153,13 @@ public class TickTockView extends View {
 
         this.calculateArc();
 
-        long ms = isInEditMode() ? System.currentTimeMillis() % 60000 : mTimeRemaining % 60000;
+        long ms = mRemainTimeInterval % 60000;
         float angle = (float) (ms * 0.006);
 
-        if (mCircleDuration == DURATION_TOTAL && mTimeRemaining > 0) {
-            long totalTime = mTotalTimeInMillis;
-            float percentage = (((float) mTimeRemaining) / ((float) totalTime));
+        if (mCircleDuration == DURATION_TOTAL && mRemainTimeInterval > 0) {
+            long totalTime = mTotalTimeInterval;
+            float percentage = (((float) mRemainTimeInterval) / ((float) totalTime));
             angle = 360f * percentage;
-        }
-
-        if (isInEditMode()) {
-            angle *= -1;
         }
 
         // The fill
@@ -202,13 +181,12 @@ public class TickTockView extends View {
         }
 
         canvas.drawBitmap(mCanvasBitmap, mMatrix, null);
-        if (isInEditMode()) {
-            mTimeRemaining = System.currentTimeMillis();
-        }
 
-        if (!TextUtils.isEmpty(mText)) {
-            canvas.drawText(mText.toString(), getWidth() / 2 - mTextBounds.width() / 2,
-                    getHeight() / 2 + mTextBounds.height() / 2, mTextPaint);
+        if (!TextUtils.isEmpty(mTickTockText)) {
+            canvas.drawText(mTickTockText.toString(),
+                    getWidth() / 2 - mTextBounds.width() / 2,
+                    getHeight() / 2 + mTextBounds.height() / 2,
+                    mTextPaint);
         }
     }
 
@@ -252,24 +230,32 @@ public class TickTockView extends View {
         mArc.bottom = mCenter.y + mRingRadius;
     }
 
-    private void updateTickText(long millis) {
+    private void updateTickTockText(long millis) {
         String text = DateUtil.millisecondToHHHMMSS(millis);
-        if (!TextUtils.isEmpty(text)) {
-            if (mText != null && mText.length() != text.length()) {
-                mTextPaint.getTextBounds(text, 0, text.length(), mTextBounds);
-            }
-            mText = text;
-            invalidate();
+        if (TextUtils.isEmpty(text)) {
+            return;
         }
+
+        if (mTickTockText != null && mTickTockText.equals(text)) {
+            return;
+        }
+
+        if (mTickTockText != null && mTickTockText.length() != text.length()) {
+            mTextPaint.getTextBounds(text, 0, text.length(), mTextBounds);
+        }
+
+        mTickTockText = text;
+
+        this.invalidate();
     }
 
-    public void setRemainTimerInterval(long millis) {
-        mTimeRemaining = millis;
-        this.updateTickText(millis);
+    public void setRemainTimeInterval(long millis) {
+        mRemainTimeInterval = millis;
+        this.updateTickTockText(millis);
     }
 
-    public void setTotalTimerInterval(long millis) {
-        mTotalTimeInMillis = millis;
+    public void setTotalTimeInterval(long totalTimeInterval) {
+        mTotalTimeInterval = totalTimeInterval;
     }
 
     private void fitText(CharSequence text) {
@@ -279,6 +265,6 @@ public class TickTockView extends View {
             float multi = ((mRingRadius * 2) - mTextPadding * 2) / textWidth;
             mTextPaint.setTextSize(mFillPaint.getTextSize() * multi);
         }
-        mTextPaint.getTextBounds(mText.toString(), 0, mText.length(), mTextBounds);
+        mTextPaint.getTextBounds(mTickTockText.toString(), 0, mTickTockText.length(), mTextBounds);
     }
 }
