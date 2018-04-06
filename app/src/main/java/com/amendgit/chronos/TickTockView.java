@@ -137,12 +137,10 @@ public class TickTockView extends View {
 
     public void start(long timeInMillis) {
         mTotalTimeInMillis = timeInMillis;
-        if (mTimer != null) { mTimer.cancel(); mTimer = null; }
         this.startCountDownTimer(mTotalTimeInMillis);
     }
 
     public void pause() {
-        mTimer.cancel();
     }
 
     public void resume() {
@@ -150,9 +148,6 @@ public class TickTockView extends View {
     }
 
     public void stop() {
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
         mTimeRemaining = 0;
         mTotalTimeInMillis = 0;
         this.updateTickText(0);
@@ -317,12 +312,4 @@ public class TickTockView extends View {
         }
         mTextPaint.getTextBounds(mText.toString(), 0, mText.length(), mTextBounds);
     }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        if (mTimer != null) { this.stop(); }
-        super.onDetachedFromWindow();
-    }
-
-    private CountDownTimer mTimer = null;
 }
