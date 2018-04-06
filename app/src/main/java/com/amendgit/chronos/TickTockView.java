@@ -140,26 +140,9 @@ public class TickTockView extends View {
         this.startCountDownTimer(mTotalTimeInMillis);
     }
 
-    public void pause() {
-    }
-
-    public void resume() {
-        this.startCountDownTimer(mTimeRemaining);
-    }
-
-    public void stop() {
-        mTimeRemaining = 0;
-        mTotalTimeInMillis = 0;
-        this.updateTickText(0);
-    }
-
     public interface TickTockDelegate {
         String getTickText(long timeRemainingInMillis);
         void onTickFinish();
-    }
-
-    public void setOnTickDelegate(TickTockDelegate l) {
-        mTickDelegate = l;
     }
 
     @Override
@@ -291,16 +274,6 @@ public class TickTockView extends View {
 
     public void setTotalTimerInterval(long millis) {
         mTotalTimeInMillis = millis;
-    }
-
-    private void onTickTock(long millis) {
-        mTimeRemaining = millis;
-        this.updateTickText(millis);
-    }
-
-    private void onTickFinish() {
-        this.updateTickText(0);
-        mTickDelegate.onTickFinish();
     }
 
     private void fitText(CharSequence text) {
