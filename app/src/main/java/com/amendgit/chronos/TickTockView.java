@@ -91,24 +91,24 @@ public class TickTockView extends View {
         mDotRadius     *= multi;
         mTextPadding   *= multi;
 
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TickTockView, 0, 0);
+        TypedArray styledAttrs = context.obtainStyledAttributes(attrs, R.styleable.TickTockView, 0, 0);
         try {
-            mEmptyRingColor = ta.getColor(R.styleable.TickTockView_tickEmptyRingColor, mEmptyRingColor);
-            mFillRingColor  = ta.getColor(R.styleable.TickTockView_tickFillRingColor,  mFillRingColor);
-            mMiddleColor    = ta.getColor(R.styleable.TickTockView_tickMiddleColor,    mMiddleColor);
-            mTextColor      = ta.getColor(R.styleable.TickTockView_tickTextColor,      mTextColor);
+            mEmptyRingColor = styledAttrs.getColor(R.styleable.TickTockView_tickEmptyRingColor, mEmptyRingColor);
+            mFillRingColor  = styledAttrs.getColor(R.styleable.TickTockView_tickFillRingColor,  mFillRingColor);
+            mMiddleColor    = styledAttrs.getColor(R.styleable.TickTockView_tickMiddleColor,    mMiddleColor);
+            mTextColor      = styledAttrs.getColor(R.styleable.TickTockView_tickTextColor,      mTextColor);
 
-            mRingThickness = ta.getDimension(R.styleable.TickTockView_tickRingThickness, mRingThickness);
-            mDotRadius     = ta.getDimension(R.styleable.TickTockView_tickDotRadius,     mDotRadius);
-            mTextSize      = ta.getDimension(R.styleable.TickTockView_tickTextSize,      mTextSize);
+            mRingThickness = styledAttrs.getDimension(R.styleable.TickTockView_tickRingThickness, mRingThickness);
+            mDotRadius     = styledAttrs.getDimension(R.styleable.TickTockView_tickDotRadius,     mDotRadius);
+            mTextSize      = styledAttrs.getDimension(R.styleable.TickTockView_tickTextSize,      mTextSize);
 
-            mTickTockText = ta.getText(R.styleable.TickTockView_tickText);
-            mAutoFitText = ta.getBoolean(R.styleable.TickTockView_tickAutoFitText, mAutoFitText);
+            mTickTockText = styledAttrs.getText(R.styleable.TickTockView_tickText);
+            mAutoFitText = styledAttrs.getBoolean(R.styleable.TickTockView_tickAutoFitText, mAutoFitText);
 
-            mCounterClockwise = ta.getBoolean(R.styleable.TickTockView_tickMoveCounterClockwise, mCounterClockwise);
-            mCircleDuration   = ta.getInt(R.styleable.TickTockView_tickCircleDuration,           mCircleDuration);
+            mCounterClockwise = styledAttrs.getBoolean(R.styleable.TickTockView_tickMoveCounterClockwise, mCounterClockwise);
+            mCircleDuration   = styledAttrs.getInt(R.styleable.TickTockView_tickCircleDuration,           mCircleDuration);
         } finally {
-            ta.recycle();
+            styledAttrs.recycle();
         }
         mEmptyPaint.setColor(mEmptyRingColor);
         mFillPaint.setColor(mFillRingColor);
