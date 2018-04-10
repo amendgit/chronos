@@ -24,7 +24,7 @@ public class FocusActivity extends AppCompatActivity {
         mController = FocusController.getInstance();
         mController.addDelegate(new FocusController.FocusDelegate() {
             @Override
-            public void onTick(long remainMillis) {
+            public void onTickTock(long remainMillis) {
                 mCountDownView.setTotalTimeInterval(mController.getTotalTimeInterval());
                 mCountDownView.setRemainTimeInterval(remainMillis);
             }

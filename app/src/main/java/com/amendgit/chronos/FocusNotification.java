@@ -29,7 +29,7 @@ public class FocusNotification extends Service {
         mController = FocusController.getInstance();
         mController.addDelegate(new FocusController.FocusDelegate() {
             @Override
-            public void onTick(long remainMillis) {
+            public void onTickTock(long remainMillis) {
                 if (DateUtil.millisecondToHHHMMSS(remainMillis).equals(mTimeLabelText)) {
                     return;
                 }

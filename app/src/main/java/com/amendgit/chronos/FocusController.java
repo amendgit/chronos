@@ -61,7 +61,7 @@ public class FocusController {
             public void onTick(long l) {
                 mRemainTimerInterval = l;
                 for (FocusDelegate delegate : mDelegates) {
-                    delegate.onTick(l);
+                    delegate.onTickTock(l);
                 }
             }
 
@@ -94,7 +94,7 @@ public class FocusController {
     }
 
     public interface FocusDelegate {
-        void onTick(long remainMillis);
+        void onTickTock(long remainMillis);
         void onFinish();
         void onStateChange(FocusState state);
     }
