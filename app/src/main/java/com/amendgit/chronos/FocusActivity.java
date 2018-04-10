@@ -31,9 +31,11 @@ public class FocusActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                // We should be ready for next focus when previous focus finished.
                 displayReadyUI();
                 MediaPlayer mediaPlayer = MediaPlayer.create(FocusActivity.this, R.raw.beat);
                 mediaPlayer.start();
+                // todo: write the information to database.
             }
 
             @Override
