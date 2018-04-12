@@ -24,6 +24,6 @@ public class Globals {
             return null;
         }
         db.execSQL("create table if not exists focus_events (id integer, startTime datetime, endTime datetime)");
-        return null;
+        return db;
     }
 }
