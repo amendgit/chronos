@@ -10,7 +10,7 @@ import java.util.Date;
  * email: shijian0912@163.com
  * homepage: http:www.amendgit.com
  */
-public class FocusDatabase {
+public class FocusDAO {
     public void addEvent(FocusEvent event) {
         // toimpl
     }
