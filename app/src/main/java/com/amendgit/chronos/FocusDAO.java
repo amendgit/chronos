@@ -1,6 +1,6 @@
 package com.amendgit.chronos;
 
-import android.database.sqlite.SQLiteOpenHelper;
+import android.content.ContentValues;
 
 import java.util.Date;
 
@@ -12,7 +12,10 @@ import java.util.Date;
  */
 public class FocusDAO {
     public void addEvent(FocusEvent event) {
-        // toimpl
+        ContentValues record = new ContentValues();
+        record.put("start_time", DateUtil.formatDate(event.getStartTime()));
+        record.put("end_time", DateUtil.formatDate(event.getEndTime()));
+        Globals.getDatabase().insert("focus_events", null, record);
     }
 
     public void getLatestEventDate() {
