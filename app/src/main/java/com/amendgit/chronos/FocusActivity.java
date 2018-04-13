@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Date;
+
 public class FocusActivity extends AppCompatActivity {
     private TickTockView mCountDownView;
     private Button mStartButton;
@@ -35,7 +37,9 @@ public class FocusActivity extends AppCompatActivity {
                 displayReadyUI();
                 MediaPlayer mediaPlayer = MediaPlayer.create(FocusActivity.this, R.raw.beat);
                 mediaPlayer.start();
-                // todo: write the information to database.
+                FocusEvent event = new FocusEvent();
+                event.setStartTime(new Date());
+                FocusDAO.addEvent(event);
             }
 
             @Override
