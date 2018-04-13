@@ -11,7 +11,7 @@ import java.util.Date;
  * homepage: http:www.amendgit.com
  */
 public class FocusDAO {
-    public static void addEvent(FocusEvent event) {
+    public static void insertEvent(FocusEvent event) {
         ContentValues record = new ContentValues();
         record.put("start_time", DateUtil.formatDate(event.getStartTime()));
         record.put("end_time", DateUtil.formatDate(event.getEndTime()));

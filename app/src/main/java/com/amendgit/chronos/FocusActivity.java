@@ -39,7 +39,7 @@ public class FocusActivity extends AppCompatActivity {
                 mediaPlayer.start();
                 FocusEvent event = new FocusEvent();
                 event.setStartTime(new Date());
-                FocusDAO.addEvent(event);
+                FocusDAO.insertEvent(event);
             }
 
             @Override
