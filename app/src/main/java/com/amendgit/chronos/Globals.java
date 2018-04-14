@@ -26,7 +26,12 @@ public class Globals {
             Log.d(TAG, "open data base failed.");
             return null;
         }
-        db.execSQL("create table if not exists focus_events (id integer primary key asc, start_time datetime, end_time datetime)");
+        db.execSQL("create table if not exists focus_events ("
+                + "id integer primary key asc,"
+                + "start_time datetime,"
+                + "end_time datetime,"
+                + "focus_interval integer"
+            +")");
         return db;
     }
 }
