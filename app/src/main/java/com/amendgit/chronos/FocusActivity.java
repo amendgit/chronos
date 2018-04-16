@@ -37,9 +37,6 @@ public class FocusActivity extends AppCompatActivity {
                 displayReadyUI();
                 MediaPlayer mediaPlayer = MediaPlayer.create(FocusActivity.this, R.raw.beat);
                 mediaPlayer.start();
-                FocusEvent event = new FocusEvent();
-                event.setStartTime(new Date());
-                FocusDAO.insertEvent(event);
             }
 
             @Override

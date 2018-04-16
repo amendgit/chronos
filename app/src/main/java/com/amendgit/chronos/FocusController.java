@@ -3,6 +3,8 @@ package com.amendgit.chronos;
 import android.os.CountDownTimer;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by jash on 25/03/2018.
@@ -13,8 +15,11 @@ public class FocusController {
 
     private CountDownTimer mCountDownTimer;
     private FocusState mState;
+
     private long mRemainTimerInterval;
     private long mTotalTimerInterval;
+    private Date mStartTime;
+
     private ArrayList<FocusDelegate> mDelegates;
 
     private FocusController() {
@@ -36,6 +41,7 @@ public class FocusController {
 
     public void start(long totalTimeInterval) {
         this.setState(FocusState.FOCUSING);
+        mStartTime = Calendar.getInstance().getTime();
         mTotalTimerInterval = totalTimeInterval;
         mCountDownTimer = buildCountDownTimer(totalTimeInterval);
     }
@@ -67,6 +73,11 @@ public class FocusController {
 
             @Override
             public void onFinish() {
+                FocusEvent event = new FocusEvent();
+                event.setStartTime(mStartTime);
+                event.setEndTime(Calendar.getInstance().getTime());
+                event.setFocusInterval(mTotalTimerInterval);
+                FocusDAO.insertEvent(event);
                 for (FocusDelegate delegate : mDelegates) {
                     delegate.onFinish();
                 }

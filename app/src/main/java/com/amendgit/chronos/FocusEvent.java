@@ -9,22 +9,31 @@ import java.util.Date;
  * homepage: http:www.amendgit.com
  */
 public class FocusEvent {
-    private Date startTime;
-    private Date endTime;
+    private Date mStartTime;
+    private Date mEndTime;
+    private long mFocusInterval;
 
     public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+        mStartTime = startTime;
     }
 
     public Date getStartTime() {
-        return startTime;
+        return mStartTime;
     }
 
     public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+        mEndTime = endTime;
     }
 
     public Date getEndTime() {
-        return endTime;
+        return mEndTime;
+    }
+
+    public void setFocusInterval(long focusInterval) {
+        mFocusInterval = focusInterval;
+    }
+
+    public long getFocusInterval() {
+        return mFocusInterval;
     }
 }

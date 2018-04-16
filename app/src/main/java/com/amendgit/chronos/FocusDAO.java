@@ -15,6 +15,7 @@ public class FocusDAO {
         ContentValues record = new ContentValues();
         record.put("start_time", DateUtil.formatDate(event.getStartTime()));
         record.put("end_time", DateUtil.formatDate(event.getEndTime()));
+        record.put("focus_interval", event.getFocusInterval());
         Globals.getDatabase().insert("focus_events", null, record);
     }
 
