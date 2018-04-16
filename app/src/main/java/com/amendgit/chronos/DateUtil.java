@@ -22,6 +22,7 @@ class DateUtil {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static String formatDate(Date date) {
+        if (date == null) return "";
         return dateFormat.format(date);
     }
 }
