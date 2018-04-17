@@ -231,7 +231,7 @@ public class TickTockView extends View {
     }
 
     private void updateTickTockText(long millis) {
-        String text = DateUtil.millisecondToHHHMMSS(millis);
+        String text = DateUtils.millisecondToHHHMMSS(millis);
         if (TextUtils.isEmpty(text)) {
             return;
         }

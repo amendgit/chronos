@@ -11,7 +11,7 @@ import java.util.Date;
  * homepage: http:www.amendgit.com
  */
 
-class DateUtil {
+class DateUtils {
     public static String millisecondToHHHMMSS(long millis) {
         int s = (int) ( millis /  1000)            % 60;
         int m = (int) ((millis / (1000 * 60))      % 60);
@@ -20,7 +20,6 @@ class DateUtil {
     }
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     public static String formatDate(Date date) {
         if (date == null) return "";
         return dateFormat.format(date);
