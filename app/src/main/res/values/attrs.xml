@@ -16,4 +16,13 @@
             <enum name="total_time" value="1" />
         </attr>
     </declare-styleable>
+    <attr name="palette" format="reference"/>
+
+    <attr name="highContrastReverseTextColor" format="reference"/>
+    <attr name="mediumContrastReverseTextColor" format="reference"/>
+    <attr name="lowContrastReverseTextColor" format="reference"/>
+
+    <attr name="highContrastTextColor" format="reference"/>
+    <attr name="mediumContrastTextColor" format="reference"/>
+    <attr name="lowContrastTextColor" format="reference"/>
 </resources>
