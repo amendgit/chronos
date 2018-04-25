@@ -29,6 +29,9 @@ import android.view.*;
 import java.text.*;
 import java.util.*;
 
+import static com.amendgit.chronos.Checkmark.UNCHECKED;
+import static com.amendgit.chronos.Checkmark.CHECKED_EXPLICITLY;
+
 public class HistoryChart extends ScrollableChart
 {
     private int[] checkmarks;
@@ -361,8 +364,8 @@ public class HistoryChart extends ScrollableChart
     }
 
     private void initDateFormats() {
-        dfMonth = DateFormats.fromSkeleton("MMM");
-        dfYear = DateFormats.fromSkeleton("yyyy");
+        dfMonth = DateUtils.fromSkeleton("MMM");
+        dfYear = DateUtils.fromSkeleton("yyyy");
     }
 
     private void initRects() {
