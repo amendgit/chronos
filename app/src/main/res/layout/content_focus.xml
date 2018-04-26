@@ -15,6 +15,8 @@
         android:layout_height="200dp"
         app:tickText="00:00:00"
         app:tickFillRingColor="@color/colorPrimaryGreen"
+        app:tickTextColor="@color/colorPrimaryGreen"
+        app:tickEmptyRingColor="@color/colorShadowDark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
